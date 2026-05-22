@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio.AI - Premium AI Audio Suite</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <header class="app-header">
+            <div class="logo">
+                <i class="fa-solid fa-wand-magic-sparkles brand-icon"></i>
+                <span class="brand-text">Studio<span class="accent-dot">.</span>AI</span>
+                <span class="badge">MVP v1.0</span>
+            </div>
+            <div class="header-status">
+                <span class="status-indicator online"></span>
+                <span class="status-text">AI Engines Operational</span>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="workspace">
+            <!-- Left Sidebar Navigation -->
+            <nav class="sidebar">
+                <div class="nav-section-title">AI Studio Tools</div>
+                <button class="nav-btn active" data-tab="tts-tab">
+                    <i class="fa-solid fa-microphone-lines nav-icon"></i>
+                    <span>Text-to-Speech</span>
+                </button>
+                <button class="nav-btn" data-tab="enhance-tab">
+                    <i class="fa-solid fa-wand-magic-sparkles nav-icon"></i>
+                    <span>Audio Enhancer</span>
+                </button>
+                <button class="nav-btn" data-tab="transcribe-tab">
+                    <i class="fa-solid fa-quote-left nav-icon"></i>
+                    <span>Transcription</span>
+                </button>
+
+                <div class="nav-section-title mt-4">System Console</div>
+                <div class="system-stats">
+                    <div class="stat-row">
+                        <span>Latency</span>
+                        <span class="stat-val font-mono">14ms</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>DSP Engine</span>
+                        <span class="stat-val font-mono">Py-Audio</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>API Status</span>
+                        <span class="stat-val text-green font-mono">ACTIVE</span>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Center Panel: Dynamic Workspaces -->
+            <section class="editor-panel">
+                
+                <!-- TAB 1: Text-to-Speech Studio -->
+                <div id="tts-tab" class="tab-content active">
+                    <div class="tab-header">
+                        <h2>Text-to-Speech Generator</h2>
+                        <p>Generate highly realistic, emotional, and natural-sounding multilingual voiceovers using neural models.</p>
+                    </div>
+
+                    <div class="tts-grid">
+                        <div class="tts-form-section">
+                            <div class="form-group">
+                                <label for="tts-text">Enter Script / Text to Synthesize</label>
+                                <textarea id="tts-text" placeholder="Type or paste your text here... For example: 'Welcome to the future of high-performance artificial intelligence audio engineering!'" rows="6"></textarea>
+                                <div class="text-counter"><span id="char-count">0</span> / 2000 chars</div>
+                            </div>
+                            
+                            <div class="settings-row">
+                                <div class="form-group flex-1">
+                                    <label for="tts-voice">AI Voice Profile</label>
+                                    <select id="tts-voice">
+                                        <option value="en_female_1" selected>Aria - Warm Female (US)</option>
+                                        <option value="en_male_1">Guy - Corporate Male (US)</option>
+                                        <option value="en_uk_female">Sonia - Professional Female (UK)</option>
+                                        <option value="en_uk_male">Ryan - Clean Male (UK)</option>
+                                        <option value="ar_eg_female">Salma - Egyptian Dialect (Arabic Female)</option>
+                                        <option value="ar_eg_male">Shakir - Egyptian Dialect (Arabic Male)</option>
+                                        <option value="ar_sa_female">Zariyah - Saudi Dialect (Arabic Female)</option>
+                                        <option value="ar_sa_male">Hamed - Saudi Dialect (Arabic Male)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group flex-1">
+                                    <label for="tts-rate">Speaking Rate (Speed)</label>
+                                    <select id="tts-rate">
+                                        <option value="-20%">Slow (-20%)</option>
+                                        <option value="-10%">Slightly Slow (-10%)</option>
+                                        <option value="+0%" selected>Normal (100%)</option>
+                                        <option value="+10%">Slightly Fast (+10%)</option>
+                                        <option value="+25%">Fast (+25%)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button id="btn-generate-tts" class="btn-primary">
+                                <i class="fa-solid fa-circle-play btn-icon"></i>
+                                <span>Synthesize Voiceover</span>
+                            </button>
+                        </div>
+
+                        <!-- TTS Output Player Box -->
+                        <div class="player-container glassmorphic">
+                            <div class="player-header">
+                                <span class="badge-active"><i class="fa-solid fa-wave-square pulse-icon"></i> Waveform Output</span>
+                                <span class="file-name" id="tts-audio-filename">synthesized.mp3</span>
+                            </div>
+                            
+                            <div class="waveform-visualizer">
+                                <canvas id="tts-waveform-canvas"></canvas>
+                                <div class="waveform-overlay" id="tts-waveform-placeholder">
+                                    <i class="fa-solid fa-microphone fa-2x animate-pulse"></i>
+                                    <span>Synthesize script to display the audio wave</span>
+                                </div>
+                            </div>
+                            
+                            <div class="player-controls">
+                                <div class="player-btn-group">
+                                    <button class="player-btn" id="btn-tts-play" disabled><i class="fa-solid fa-play"></i></button>
+                                    <button class="player-btn" id="btn-tts-pause" style="display:none;"><i class="fa-solid fa-pause"></i></button>
+                                    <button class="player-btn" id="btn-tts-stop" disabled><i class="fa-solid fa-stop"></i></button>
+                                </div>
+                                
+                                <div class="timeline-container">
+                                    <span class="time-label font-mono" id="tts-current-time">0:00</span>
+                                    <input type="range" class="timeline-slider" id="tts-timeline" min="0" max="100" value="0" disabled>
+                                    <span class="time-label font-mono" id="tts-duration">0:00</span>
+                                </div>
+                                
+                                <a id="btn-tts-download" href="#" class="btn-download" style="visibility: hidden;">
+                                    <i class="fa-solid fa-cloud-arrow-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: Audio Enhancer / Denoiser -->
+                <div id="enhance-tab" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Audio Enhancer & Background Denoise</h2>
+                        <p>Leverage state-of-the-art spectral gating noise reduction and leveling to achieve professional studio-grade clarity.</p>
+                    </div>
+
+                    <div class="enhance-grid">
+                        <div class="uploader-column">
+                            <!-- Drag & Drop Zone -->
+                            <div class="dropzone" id="enhance-dropzone">
+                                <input type="file" id="enhance-file-input" accept="audio/*" style="display: none;">
+                                <div class="dropzone-inner">
+                                    <div class="upload-icon-wrapper">
+                                        <i class="fa-solid fa-cloud-arrow-up cloud-icon"></i>
+                                    </div>
+                                    <h3>Drag & drop your audio file</h3>
+                                    <p>Supports MP3, WAV, M4A up to 25MB</p>
+                                    <button class="btn-secondary" onclick="document.getElementById('enhance-file-input').click()">Browse Files</button>
+                                </div>
+                            </div>
+
+                            <div class="file-loaded-info" id="file-info-container" style="display: none;">
+                                <div class="file-details">
+                                    <i class="fa-solid fa-file-audio file-icon-blue"></i>
+                                    <div>
+                                        <div class="file-title" id="loaded-filename">audio_record.wav</div>
+                                        <div class="file-size" id="loaded-filesize">4.2 MB</div>
+                                    </div>
+                                </div>
+                                <button class="btn-remove" id="btn-remove-file"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+
+                            <!-- Parameters sidebar inside grid -->
+                            <div class="settings-card glassmorphic">
+                                <h3>DSP Engine Settings</h3>
+                                
+                                <div class="form-group mt-3">
+                                    <div class="slider-header">
+                                        <label for="noise-strength">Denoise Strength</label>
+                                        <span class="slider-val font-mono" id="strength-val">100%</span>
+                                    </div>
+                                    <input type="range" id="noise-strength" min="0" max="1" step="0.05" value="1.0" class="custom-slider">
+                                    <p class="slider-help">Higher strength suppresses heavier background hums/hisses but might isolate speech closely.</p>
+                                </div>
+
+                                <button id="btn-process-enhance" class="btn-primary w-full mt-3" disabled>
+                                    <i class="fa-solid fa-wand-magic-sparkles btn-icon"></i>
+                                    <span>Enhance Audio File</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- A/B Comparison Player Column -->
+                        <div class="comparison-column">
+                            <div class="player-container glassmorphic h-full">
+                                <div class="player-header">
+                                    <span class="badge-active"><i class="fa-solid fa-sliders"></i> Master Output Sandbox</span>
+                                    <div class="ab-toggle-group">
+                                        <button class="ab-toggle-btn active" id="btn-toggle-original" disabled>Original</button>
+                                        <button class="ab-toggle-btn" id="btn-toggle-enhanced" disabled>Enhanced</button>
+                                    </div>
+                                </div>
+
+                                <div class="visualizer-block">
+                                    <div class="waveform-label font-mono">SPECTRUM WAVEFORM PREVIEW</div>
+                                    <div class="waveform-visualizer large-height">
+                                        <canvas id="enhance-waveform-canvas"></canvas>
+                                        <div class="waveform-overlay" id="enhance-waveform-placeholder">
+                                            <i class="fa-solid fa-volume-high fa-2x animate-pulse"></i>
+                                            <span>Upload an audio file to display and enhance its spectrum</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="player-controls">
+                                    <div class="player-btn-group">
+                                        <button class="player-btn" id="btn-enhance-play" disabled><i class="fa-solid fa-play"></i></button>
+                                        <button class="player-btn" id="btn-enhance-pause" style="display:none;"><i class="fa-solid fa-pause"></i></button>
+                                        <button class="player-btn" id="btn-enhance-stop" disabled><i class="fa-solid fa-stop"></i></button>
+                                    </div>
+                                    
+                                    <div class="timeline-container">
+                                        <span class="time-label font-mono" id="enhance-current-time">0:00</span>
+                                        <input type="range" class="timeline-slider" id="enhance-timeline" min="0" max="100" value="0" disabled>
+                                        <span class="time-label font-mono" id="enhance-duration">0:00</span>
+                                    </div>
+                                    
+                                    <a id="btn-enhance-download" href="#" class="btn-download" style="visibility: hidden;">
+                                        <i class="fa-solid fa-download"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: Audio Transcription Sandbox -->
+                <div id="transcribe-tab" class="tab-content">
+                    <div class="tab-header">
+                        <h2>AI Speech-to-Text Transcription</h2>
+                        <p>Transcribe English & Arabic voices into structural, high-precision timestamped text formats instantly.</p>
+                    </div>
+
+                    <div class="transcribe-grid">
+                        <div class="transcribe-left">
+                            <div class="dropzone" id="transcribe-dropzone">
+                                <input type="file" id="transcribe-file-input" accept="audio/*" style="display: none;">
+                                <div class="dropzone-inner">
+                                    <div class="upload-icon-wrapper purple-glow">
+                                        <i class="fa-solid fa-quote-left cloud-icon"></i>
+                                    </div>
+                                    <h3>Drag & drop voice recordings</h3>
+                                    <p>Optimized for interview logs, lectures, and speech</p>
+                                    <button class="btn-secondary" onclick="document.getElementById('transcribe-file-input').click()">Browse Files</button>
+                                </div>
+                            </div>
+
+                            <div class="file-loaded-info mt-3" id="t-file-info-container" style="display: none;">
+                                <div class="file-details">
+                                    <i class="fa-solid fa-microphone-lines file-icon-purple"></i>
+                                    <div>
+                                        <div class="file-title" id="t-loaded-filename">interview.mp3</div>
+                                        <div class="file-size" id="t-loaded-filesize">8.4 MB</div>
+                                    </div>
+                                </div>
+                                <button class="btn-remove" id="btn-remove-t-file"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+
+                            <div class="settings-card glassmorphic mt-3">
+                                <h3>Transcription Profiles</h3>
+                                <div class="form-group mt-3">
+                                    <label for="transcribe-lang">Primary Speech Language</label>
+                                    <select id="transcribe-lang">
+                                        <option value="en" selected>English (US & Multi-accent)</option>
+                                        <option value="ar">Arabic (العربية - All Dialects)</option>
+                                    </select>
+                                </div>
+                                <button id="btn-process-transcribe" class="btn-primary w-full mt-3" disabled>
+                                    <i class="fa-solid fa-language btn-icon"></i>
+                                    <span>Transcribe File</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Transcription Editor & Waveform Synchronization -->
+                        <div class="transcribe-right">
+                            <div class="editor-container glassmorphic">
+                                <div class="editor-header">
+                                    <span class="editor-title"><i class="fa-regular fa-file-lines text-purple"></i> Interactive Transcript Timeline</span>
+                                    <button class="btn-copy-text" id="btn-copy-transcript" disabled><i class="fa-regular fa-copy"></i> Copy</button>
+                                </div>
+                                
+                                <div class="editor-content-area" id="transcript-editor">
+                                    <div class="editor-empty-state">
+                                        <i class="fa-regular fa-closed-captioning fa-2x"></i>
+                                        <span>Click Transcribe to view full timestamped segments</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+        
+        <!-- Overlay Loading Modal -->
+        <div class="overlay-modal" id="processing-overlay">
+            <div class="modal-card glassmorphic">
+                <div class="spinner-container">
+                    <div class="radar-spinner"></div>
+                    <div class="radar-dot"></div>
+                </div>
+                <h3 id="overlay-title">Processing Audio Pipeline</h3>
+                <p id="overlay-subtitle">Deploying neural models to refine wave frequencies...</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="overlay-progress" style="width: 45%;"></div>
+                </div>
+                <div class="progress-percentage font-mono" id="overlay-percent">45%</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
